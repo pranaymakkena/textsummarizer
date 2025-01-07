@@ -1,3 +1,4 @@
+from flask import Flask, request, render_template_string
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, sent_tokenize
@@ -6,14 +7,36 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 nltk.download('punkt')
 nltk.download('stopwords')
 
-def summarize_text(file_path):
-    # Read the input file
-    with open(file_path, 'r') as file:
-        text = file.read()
+# Flask app setup
+app = Flask(__name__)
 
+# HTML template for file upload
+UPLOAD_HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer</title>
+</head>
+<body>
+    <h1>Upload Your Text File for Summarization</h1>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".txt" required>
+        <button type="submit">Summarize</button>
+    </form>
+    {% if summary %}
+    <h2>Summary:</h2>
+    <p>{{ summary }}</p>
+    {% endif %}
+</body>
+</html>
+"""
+
+def summarize_text(text):
     # Tokenize text into sentences
     sentences = sent_tokenize(text)
-    
+
     # Tokenize text into words and remove stopwords
     stop_words = set(stopwords.words('english'))
     words = word_tokenize(text.lower())
@@ -45,13 +68,20 @@ def summarize_text(file_path):
 
     return summary
 
-if __name__ == "__main__":
-    # Replace command-line argument with user input
-    file_path = input("Enter the path to your text file (e.g., sample_text.txt): ")
+@app.route("/", methods=["GET", "POST"])
+def upload_file():
+    summary = None
+    if request.method == "POST":
+        uploaded_file = request.files["file"]
+        if uploaded_file.filename.endswith(".txt"):
+            # Read the file content
+            text = uploaded_file.read().decode("utf-8")
+            # Generate summary
+            summary = summarize_text(text)
+        else:
+            summary = "Error: Please upload a valid .txt file."
 
-    try:
-        summary = summarize_text(file_path)
-        print("\nSummary:")
-        print(summary)
-    except FileNotFoundError:
-        print("Error: File not found. Please check the file path and try again.")
+    return render_template_string(UPLOAD_HTML, summary=summary)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
