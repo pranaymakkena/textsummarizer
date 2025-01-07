@@ -5,7 +5,7 @@ Text Summarizer summarizes a given text using the Natural Language Toolkit (nltk
 ## Prerequisites
 
 - Python 3.x
-- nklt library
+- nlkt library
 
 ## Installation
 
