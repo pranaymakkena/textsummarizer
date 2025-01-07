@@ -14,12 +14,6 @@ Text Summarizer summarizes a given text using the Natural Language Toolkit (nltk
 ~~~bash
 pip install -r requirements.txt
 ~~~
-3. Make sure to download the necessary NLTK resources by running the following in a Python shell:
-~~~bash
-import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
-~~~
 
 ## Usage
 
