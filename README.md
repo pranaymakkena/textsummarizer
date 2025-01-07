@@ -17,9 +17,9 @@ pip install -r requirements.txt
 
 ## Usage
 
-1.	Place your text file (e.g., your_text_file.txt) in the project folder.
+1.	Place your text file (e.g., textfile.txt) in the project folder.
 2.	Run the text_summarizer.py script to summarize the content of your file:
 ~~~bash
-python text_summarizer.py <your_text_file.txt>
+python text_summarizer.py textfile.txt
 ~~~ 
 3. The script will output a summary of the text to the console.
