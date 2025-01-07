@@ -1,7 +1,6 @@
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, sent_tokenize
-import sys
 
 # Download required nltk data files
 nltk.download('punkt')
@@ -47,10 +46,12 @@ def summarize_text(file_path):
     return summary
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python text_summarizer.py <file_path>")
-    else:
-        file_path = sys.argv[1]
+    # Replace command-line argument with user input
+    file_path = input("Enter the path to your text file (e.g., sample_text.txt): ")
+
+    try:
         summary = summarize_text(file_path)
         print("\nSummary:")
         print(summary)
+    except FileNotFoundError:
+        print("Error: File not found. Please check the file path and try again.")
