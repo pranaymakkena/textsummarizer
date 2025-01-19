@@ -10,7 +10,7 @@ nltk.download('stopwords')
 # Flask app setup
 app = Flask(__name__)
 
-# HTML template for file upload with styling
+# HTML template for file upload with stylish components
 UPLOAD_HTML = """
 <!DOCTYPE html>
 <html lang="en">
@@ -25,46 +25,77 @@ UPLOAD_HTML = """
             color: #333;
             margin: 0;
             padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         h1 {
-            text-align: center;
             color: #5e5e5e;
+            margin-bottom: 20px;
         }
         .container {
-            width: 60%;
-            margin: 0 auto;
-            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            margin-top: 30px;
+            padding: 30px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
         }
         form {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        input[type="file"] {
+        /* Custom file upload button */
+        .file-input-container {
+            position: relative;
             margin-bottom: 20px;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            width: 100%;
         }
-        button {
-            padding: 10px 20px;
+        .file-input-container input[type="file"] {
+            display: none;
+        }
+        .file-input-btn {
+            padding: 12px 24px;
             font-size: 16px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .file-input-btn:hover {
+            background-color: #45a049;
+        }
+        /* Button label (file name placeholder) */
+        .file-name {
+            display: block;
+            margin-top: 10px;
+            color: #666;
+        }
+        /* Submit button */
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
         }
         button:hover {
             background-color: #45a049;
         }
         h2 {
             color: #333;
+            margin-top: 20px;
         }
         p {
             font-size: 18px;
@@ -75,13 +106,36 @@ UPLOAD_HTML = """
             color: red;
             font-size: 16px;
         }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Upload Your Text File for Summarization</h1>
         <form action="/" method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".txt" required>
+            <div class="file-input-container">
+                <input type="file" name="file" accept=".txt" id="file-upload" required>
+                <label for="file-upload" class="file-input-btn">Choose File</label>
+                <span class="file-name" id="file-name">No file selected</span>
+            </div>
             <button type="submit">Summarize</button>
         </form>
         {% if summary %}
@@ -91,6 +145,16 @@ UPLOAD_HTML = """
         <p class="error">{{ summary }}</p>
         {% endif %}
     </div>
+    <script>
+        // Update file name label when a file is selected
+        const fileInput = document.getElementById('file-upload');
+        const fileNameLabel = document.getElementById('file-name');
+        
+        fileInput.addEventListener('change', function() {
+            const fileName = this.files.length ? this.files[0].name : 'No file selected';
+            fileNameLabel.textContent = fileName;
+        });
+    </script>
 </body>
 </html>
 """
