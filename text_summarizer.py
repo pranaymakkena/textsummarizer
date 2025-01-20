@@ -87,7 +87,7 @@ UPLOAD_HTML = """
             width: 100%;
             height: 200px;
             padding: 10px;
-            margin-bottom: 20px;
+            margin: 10px 0;
             border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 16px;
@@ -121,7 +121,8 @@ UPLOAD_HTML = """
             color: white;
             font-size: 18px;
             padding: 16px 32px;
-            width: 100%;
+            width: 50%;
+            margin-top: 20px;
         }
         .summarize-btn:hover {
             background-color: #f57c00;
