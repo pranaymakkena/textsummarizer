@@ -31,7 +31,7 @@ UPLOAD_HTML = """
             align-items: center;
         }
         h1 {
-            color: #5e5e5e;
+            color: #333;
             margin-bottom: 20px;
             font-size: 28px;
         }
@@ -54,7 +54,7 @@ UPLOAD_HTML = """
         .curvy-btn {
             padding: 14px 28px;
             font-size: 16px;
-            background-color: #4CAF50;
+            background-color: #5C6BC0;
             color: white;
             border: none;
             border-radius: 30px;
@@ -65,7 +65,7 @@ UPLOAD_HTML = """
             margin: 10px 0;
         }
         .curvy-btn:hover {
-            background-color: #45a049;
+            background-color: #3f4b8a;
         }
         /* File upload container */
         .file-input-container {
@@ -79,7 +79,7 @@ UPLOAD_HTML = """
         .file-input-btn {
             padding: 14px 28px;
             font-size: 16px;
-            background-color: #FF7F50;
+            background-color: #FF8A65;
             color: white;
             border: none;
             border-radius: 30px;
@@ -90,12 +90,13 @@ UPLOAD_HTML = """
             transition: background-color 0.3s ease;
         }
         .file-input-btn:hover {
-            background-color: #FF6347;
+            background-color: #FF7043;
         }
         .file-name {
             display: block;
             margin-top: 10px;
             color: #666;
+            font-size: 14px;
         }
         h2 {
             color: #333;
@@ -109,6 +110,16 @@ UPLOAD_HTML = """
         .error {
             color: red;
             font-size: 16px;
+        }
+        /* Textarea styling */
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            box-sizing: border-box;
+            margin-top: 10px;
         }
         /* Responsive design */
         @media (max-width: 768px) {
@@ -136,18 +147,18 @@ UPLOAD_HTML = """
         <h1>Text Summarizer</h1>
         <form action="/" method="POST" enctype="multipart/form-data">
             <!-- Option Buttons to choose between writing text or uploading file -->
-            <div class="option-buttons">
+            <div class="option-buttons" style="width: 100%;">
                 <button type="button" class="curvy-btn" onclick="showTextInput()">Write Text</button>
                 <button type="button" class="curvy-btn" onclick="showFileInput()">Upload File</button>
             </div>
 
             <!-- Text input field (initially hidden) -->
-            <div id="text-input-container" style="display:none; width: 100%; margin-bottom: 20px;">
-                <textarea name="text" id="text-input" rows="6" placeholder="Write your text here..." style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd;"></textarea>
+            <div id="text-input-container" style="display:none; width: 100%; margin-top: 20px;">
+                <textarea name="text" id="text-input" rows="6" placeholder="Write your text here..."></textarea>
             </div>
 
             <!-- File upload input (initially hidden) -->
-            <div id="file-input-container" style="display:none; width: 100%;">
+            <div id="file-input-container" style="display:none; width: 100%; margin-top: 20px;">
                 <div class="file-input-container">
                     <input type="file" name="file" accept=".txt" id="file-upload" required>
                     <label for="file-upload" class="file-input-btn">Choose File</label>
