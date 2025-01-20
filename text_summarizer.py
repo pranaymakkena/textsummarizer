@@ -64,7 +64,7 @@ UPLOAD_HTML = """
         .file-input-btn {
             padding: 12px 24px;
             font-size: 16px;
-            background-color: #4CAF50;
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 8px;
@@ -74,7 +74,7 @@ UPLOAD_HTML = """
             box-sizing: border-box;
         }
         .file-input-btn:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
         }
         .file-name {
             display: block;
@@ -98,6 +98,7 @@ UPLOAD_HTML = """
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            justify-content: center;
         }
         .button-container button {
             padding: 12px 24px;
@@ -106,27 +107,24 @@ UPLOAD_HTML = """
             border-radius: 8px;
             cursor: pointer;
             width: 100%;
+            transition: background-color 0.3s ease;
         }
-        .write-btn {
+        .write-btn, .upload-btn {
             background-color: #4CAF50;
             color: white;
         }
-        .write-btn:hover {
-            background-color: #45a049;
-        }
-        .upload-btn {
-            background-color: #007bff;
-            color: white;
-        }
-        .upload-btn:hover {
-            background-color: #0056b3;
+        .write-btn:hover, .upload-btn:hover {
+            background-color: #8e24aa;
         }
         .summarize-btn {
-            background-color: #e74c3c;
+            background-color: #ff9800;
             color: white;
+            font-size: 18px;
+            padding: 16px 32px;
+            width: 100%;
         }
         .summarize-btn:hover {
-            background-color: #c0392b;
+            background-color: #f57c00;
         }
         h2 {
             color: #333;
@@ -140,6 +138,11 @@ UPLOAD_HTML = """
         .error {
             color: red;
             font-size: 16px;
+        }
+        .or-divider {
+            margin: 20px 0;
+            font-size: 18px;
+            color: #888;
         }
         /* Responsive design */
         @media (max-width: 768px) {
@@ -168,6 +171,7 @@ UPLOAD_HTML = """
         <form action="/" method="POST" enctype="multipart/form-data">
             <div class="button-container">
                 <button type="button" id="write-text" class="write-btn">Write Text</button>
+                <span class="or-divider">OR</span>
                 <button type="button" id="upload-file" class="upload-btn">Upload File</button>
             </div>
             <div class="file-input-container">
@@ -193,7 +197,7 @@ UPLOAD_HTML = """
         const writeBtn = document.getElementById('write-text');
         const uploadBtn = document.getElementById('upload-file');
         const fileLabel = document.getElementById('file-label');
-
+        
         fileInput.addEventListener('change', function() {
             const fileName = this.files.length ? this.files[0].name : 'No file selected';
             fileNameLabel.textContent = fileName;
@@ -206,14 +210,16 @@ UPLOAD_HTML = """
             fileLabel.disabled = true;
             writeBtn.style.backgroundColor = "#45a049";
             uploadBtn.style.backgroundColor = "#007bff";
+            uploadBtn.style.opacity = 0.5;
         });
 
         uploadBtn.addEventListener('click', function() {
             textArea.disabled = true;
             fileInput.disabled = false;
             fileLabel.disabled = false;
-            uploadBtn.style.backgroundColor = "#0056b3";
+            uploadBtn.style.backgroundColor = "#45a049";
             writeBtn.style.backgroundColor = "#4CAF50";
+            writeBtn.style.opacity = 0.5;
         });
     </script>
 </body>
