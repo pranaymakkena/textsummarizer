@@ -120,8 +120,10 @@ UPLOAD_HTML = """
             background-color: #ff9800;
             color: white;
             font-size: 18px;
-            padding: 16px 32px;
+            padding: 14px 28px;
             width: 50%;
+            border-radius: 10px;
+            border: none;
             margin-top: 20px;
         }
         .summarize-btn:hover {
