@@ -20,7 +20,7 @@ UPLOAD_HTML = """
     <title>Text Summarizer</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f4f7fc;
             color: #333;
             margin: 0;
@@ -33,6 +33,7 @@ UPLOAD_HTML = """
         h1 {
             color: #5e5e5e;
             margin-bottom: 20px;
+            font-size: 28px;
         }
         .container {
             width: 80%;
@@ -40,15 +41,33 @@ UPLOAD_HTML = """
             margin-top: 30px;
             padding: 30px;
             background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
         form {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        /* Custom file upload button */
+        /* Curvy border buttons */
+        .curvy-btn {
+            padding: 14px 28px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease;
+            margin: 10px 0;
+        }
+        .curvy-btn:hover {
+            background-color: #45a049;
+        }
+        /* File upload container */
         .file-input-container {
             position: relative;
             margin-bottom: 20px;
@@ -58,40 +77,25 @@ UPLOAD_HTML = """
             display: none;
         }
         .file-input-btn {
-            padding: 12px 24px;
+            padding: 14px 28px;
             font-size: 16px;
-            background-color: #4CAF50;
+            background-color: #FF7F50;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 30px;
             cursor: pointer;
             width: 100%;
             box-sizing: border-box;
             text-align: center;
+            transition: background-color 0.3s ease;
         }
         .file-input-btn:hover {
-            background-color: #45a049;
+            background-color: #FF6347;
         }
-        /* Button label (file name placeholder) */
         .file-name {
             display: block;
             margin-top: 10px;
             color: #666;
-        }
-        /* Submit button */
-        button {
-            padding: 12px 24px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        button:hover {
-            background-color: #45a049;
         }
         h2 {
             color: #333;
@@ -110,34 +114,52 @@ UPLOAD_HTML = """
         @media (max-width: 768px) {
             .container {
                 width: 90%;
-                padding: 20px;
+                padding: 25px;
             }
             h1 {
-                font-size: 24px;
+                font-size: 26px;
             }
         }
         @media (max-width: 480px) {
             .container {
                 width: 95%;
-                padding: 15px;
+                padding: 20px;
             }
             h1 {
-                font-size: 20px;
+                font-size: 22px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Upload Your Text File for Summarization</h1>
+        <h1>Text Summarizer</h1>
         <form action="/" method="POST" enctype="multipart/form-data">
-            <div class="file-input-container">
-                <input type="file" name="file" accept=".txt" id="file-upload" required>
-                <label for="file-upload" class="file-input-btn">Choose File</label>
-                <span class="file-name" id="file-name">No file selected</span>
+            <!-- Option Buttons to choose between writing text or uploading file -->
+            <div class="option-buttons">
+                <button type="button" class="curvy-btn" onclick="showTextInput()">Write Text</button>
+                <button type="button" class="curvy-btn" onclick="showFileInput()">Upload File</button>
             </div>
-            <button type="submit">Summarize</button>
+
+            <!-- Text input field (initially hidden) -->
+            <div id="text-input-container" style="display:none; width: 100%; margin-bottom: 20px;">
+                <textarea name="text" id="text-input" rows="6" placeholder="Write your text here..." style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd;"></textarea>
+            </div>
+
+            <!-- File upload input (initially hidden) -->
+            <div id="file-input-container" style="display:none; width: 100%;">
+                <div class="file-input-container">
+                    <input type="file" name="file" accept=".txt" id="file-upload" required>
+                    <label for="file-upload" class="file-input-btn">Choose File</label>
+                    <span class="file-name" id="file-name">No file selected</span>
+                </div>
+            </div>
+
+            <!-- Summarize button -->
+            <button type="submit" class="curvy-btn">Summarize</button>
         </form>
+
+        <!-- Display summary or error -->
         {% if summary %}
         <h2>Summary:</h2>
         <p>{{ summary }}</p>
@@ -145,7 +167,18 @@ UPLOAD_HTML = """
         <p class="error">{{ summary }}</p>
         {% endif %}
     </div>
+
     <script>
+        function showTextInput() {
+            document.getElementById('text-input-container').style.display = 'block';
+            document.getElementById('file-input-container').style.display = 'none';
+        }
+
+        function showFileInput() {
+            document.getElementById('file-input-container').style.display = 'block';
+            document.getElementById('text-input-container').style.display = 'none';
+        }
+
         // Update file name label when a file is selected
         const fileInput = document.getElementById('file-upload');
         const fileNameLabel = document.getElementById('file-name');
@@ -198,14 +231,18 @@ def summarize_text(text):
 def upload_file():
     summary = None
     if request.method == "POST":
-        uploaded_file = request.files["file"]
-        if uploaded_file.filename.endswith(".txt"):
-            # Read the file content
-            text = uploaded_file.read().decode("utf-8")
-            # Generate summary
+        if "text" in request.form:
+            text = request.form["text"]
             summary = summarize_text(text)
-        else:
-            summary = "Error: Please upload a valid .txt file."
+        elif "file" in request.files:
+            uploaded_file = request.files["file"]
+            if uploaded_file.filename.endswith(".txt"):
+                # Read the file content
+                text = uploaded_file.read().decode("utf-8")
+                # Generate summary
+                summary = summarize_text(text)
+            else:
+                summary = "Error: Please upload a valid .txt file."
 
     return render_template_string(UPLOAD_HTML, summary=summary)
 
