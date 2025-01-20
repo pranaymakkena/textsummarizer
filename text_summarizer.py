@@ -57,46 +57,70 @@ UPLOAD_HTML = """
             background-color: #5C6BC0;
             color: white;
             border: none;
-            border-radius: 30px;
+            border-radius: 25px;
             cursor: pointer;
             width: 100%;
             box-sizing: border-box;
-            transition: background-color 0.3s ease;
             margin: 10px 0;
+            transition: background-color 0.3s;
         }
         .curvy-btn:hover {
-            background-color: #3f4b8a;
+            background-color: #3f4c9d;
         }
-        /* File upload container */
+        /* Disabled button */
+        .disabled-btn {
+            background-color: #B0BEC5;
+            cursor: not-allowed;
+        }
+        /* Separator with "OR" */
+        .separator {
+            margin: 10px 0;
+            color: #777;
+            font-size: 18px;
+        }
+        /* Custom file upload */
         .file-input-container {
             position: relative;
             margin-bottom: 20px;
             width: 100%;
+            text-align: left;
         }
         .file-input-container input[type="file"] {
             display: none;
         }
         .file-input-btn {
-            padding: 14px 28px;
+            padding: 12px 24px;
             font-size: 16px;
-            background-color: #FF8A65;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 30px;
+            border-radius: 25px;
             cursor: pointer;
             width: 100%;
-            box-sizing: border-box;
             text-align: center;
-            transition: background-color 0.3s ease;
         }
         .file-input-btn:hover {
-            background-color: #FF7043;
+            background-color: #45a049;
         }
         .file-name {
             display: block;
             margin-top: 10px;
             color: #666;
-            font-size: 14px;
+            font-size: 16px;
+        }
+        /* Summarize button color (red) */
+        .summarize-btn {
+            padding: 14px 28px;
+            font-size: 16px;
+            background-color: #E57373;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .summarize-btn:hover {
+            background-color: #EF5350;
         }
         h2 {
             color: #333;
@@ -111,33 +135,22 @@ UPLOAD_HTML = """
             color: red;
             font-size: 16px;
         }
-        /* Textarea styling */
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            font-size: 16px;
-            box-sizing: border-box;
-            margin-top: 10px;
-        }
-        /* Responsive design */
         @media (max-width: 768px) {
             .container {
                 width: 90%;
-                padding: 25px;
+                padding: 20px;
             }
             h1 {
-                font-size: 26px;
+                font-size: 24px;
             }
         }
         @media (max-width: 480px) {
             .container {
                 width: 95%;
-                padding: 20px;
+                padding: 15px;
             }
             h1 {
-                font-size: 22px;
+                font-size: 20px;
             }
         }
     </style>
@@ -146,31 +159,23 @@ UPLOAD_HTML = """
     <div class="container">
         <h1>Text Summarizer</h1>
         <form action="/" method="POST" enctype="multipart/form-data">
-            <!-- Option Buttons to choose between writing text or uploading file -->
-            <div class="option-buttons" style="width: 100%;">
-                <button type="button" class="curvy-btn" onclick="showTextInput()">Write Text</button>
-                <button type="button" class="curvy-btn" onclick="showFileInput()">Upload File</button>
+            <div>
+                <button type="button" class="curvy-btn" id="write-text-btn" onclick="selectOption('write')">Write Text</button>
+                <span class="separator">OR</span>
+                <button type="button" class="curvy-btn" id="upload-file-btn" onclick="selectOption('upload')">Upload File</button>
             </div>
-
-            <!-- Text input field (initially hidden) -->
-            <div id="text-input-container" style="display:none; width: 100%; margin-top: 20px;">
-                <textarea name="text" id="text-input" rows="6" placeholder="Write your text here..."></textarea>
+            <div id="write-text-container" style="display:none;">
+                <textarea name="text" rows="6" placeholder="Write your text here..."></textarea>
             </div>
-
-            <!-- File upload input (initially hidden) -->
-            <div id="file-input-container" style="display:none; width: 100%; margin-top: 20px;">
+            <div id="upload-file-container" style="display:none;">
                 <div class="file-input-container">
                     <input type="file" name="file" accept=".txt" id="file-upload" required>
                     <label for="file-upload" class="file-input-btn">Choose File</label>
                     <span class="file-name" id="file-name">No file selected</span>
                 </div>
             </div>
-
-            <!-- Summarize button -->
-            <button type="submit" class="curvy-btn">Summarize</button>
+            <button type="submit" class="summarize-btn">Summarize</button>
         </form>
-
-        <!-- Display summary or error -->
         {% if summary %}
         <h2>Summary:</h2>
         <p>{{ summary }}</p>
@@ -180,14 +185,22 @@ UPLOAD_HTML = """
     </div>
 
     <script>
-        function showTextInput() {
-            document.getElementById('text-input-container').style.display = 'block';
-            document.getElementById('file-input-container').style.display = 'none';
-        }
+        let selectedOption = null;
 
-        function showFileInput() {
-            document.getElementById('file-input-container').style.display = 'block';
-            document.getElementById('text-input-container').style.display = 'none';
+        function selectOption(option) {
+            if (option === 'write') {
+                document.getElementById('write-text-btn').classList.add('disabled-btn');
+                document.getElementById('upload-file-btn').classList.remove('disabled-btn');
+                document.getElementById('write-text-container').style.display = 'block';
+                document.getElementById('upload-file-container').style.display = 'none';
+                selectedOption = 'write';
+            } else if (option === 'upload') {
+                document.getElementById('upload-file-btn').classList.add('disabled-btn');
+                document.getElementById('write-text-btn').classList.remove('disabled-btn');
+                document.getElementById('upload-file-container').style.display = 'block';
+                document.getElementById('write-text-container').style.display = 'none';
+                selectedOption = 'upload';
+            }
         }
 
         // Update file name label when a file is selected
@@ -242,10 +255,11 @@ def summarize_text(text):
 def upload_file():
     summary = None
     if request.method == "POST":
-        if "text" in request.form:
-            text = request.form["text"]
+        if 'text' in request.form:
+            # Process written text
+            text = request.form['text']
             summary = summarize_text(text)
-        elif "file" in request.files:
+        elif 'file' in request.files:
             uploaded_file = request.files["file"]
             if uploaded_file.filename.endswith(".txt"):
                 # Read the file content
