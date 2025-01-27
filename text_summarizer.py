@@ -84,6 +84,7 @@ UPLOAD_HTML = """
         }
         /* Textarea */
         .text-area {
+            font-family: Arial, sans-serif;
             width: 100%;
             height: 200px;
             padding: 10px;
