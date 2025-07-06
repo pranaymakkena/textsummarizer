@@ -283,5 +283,9 @@ def upload_file():
 
     return render_template_string(UPLOAD_HTML, summary=summary)
 
+@app.route("/healthz")
+def healthz():
+    return "OK", 200
+    
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
