@@ -18,9 +18,9 @@ pip install -r requirements.txt
 
 ## Usage
 
-1	Run the text_summarizer.py script to summarize the content of your file:
+1	Run the textsummarizer.py script to summarize the content of your file:
 ~~~bash
-python text_summarizer.py
+python textsummarizer.py
 ~~~ 
 2. Upload your .txt file when prompted.
 3. The script will output a summary of the text to the console.
